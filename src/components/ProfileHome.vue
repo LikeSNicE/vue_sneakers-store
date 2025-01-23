@@ -44,5 +44,6 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <h1>Здравствуйте : {{ userInfo.email }}</h1>
+  <h1 v-if="userInfo">Здравствуйте : {{ userInfo.email }}</h1>
+  <p v-else>Загрузка...</p>
 </template>
