@@ -74,7 +74,6 @@ const fetchFavorites = async () => {
   }
 }
 
-
 const fetchItems = async () => {
   try {
     const params = {
@@ -118,7 +117,6 @@ onMounted(async () => {
 
 watch(cart, (newCart) => {
   localStorage.setItem('cart', JSON.stringify(newCart))
-
   items.value = items.value.map((item) => ({
     ...item,
     isAdded: newCart.some((cartItem) => cartItem.id === item.id),
@@ -151,6 +149,7 @@ watch(filters, fetchItems)
     </div>
   </div>
   <div class="mt-10">
-    <CardList :items="items" @add-to-favorite="addToFavorite" @add-to-cart="onClickAddPlus" />
+    <CardList 
+    :items="items" @add-to-favorite="addToFavorite" @add-to-cart="onClickAddPlus" />
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { isAuthenticated } from '@/services/auth'
+import { authState } from '@/services/auth'
 
 defineProps({
   totalPrice: Number,
@@ -40,7 +40,7 @@ const emit = defineEmits(['openDrawer'])
       </router-link>
 
       <li
-        v-if="isAuthenticated()"
+        v-if="authState.isAuthenticated"
         class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black"
       >
         <router-link to="/profile" class="flex gap-3 items-center">

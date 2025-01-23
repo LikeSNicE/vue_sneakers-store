@@ -15,7 +15,6 @@ const registerUser = async () => {
       password: password.value,
     })
     console.log('Успешная регистрация:', response.data)
-    // Сохраняем токен в localStorage
     localStorage.setItem('token', response.data.token)
     router.push('/auth')
   } catch (error) {

@@ -3,7 +3,6 @@ import { useRouter } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
 import { authState } from '@/services/auth'
-import ProfileSiderbar from '@/components/ProfileSiderbar.vue'
 
 const router = useRouter()
 const userInfo = ref(null)
@@ -44,18 +43,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 <template>
-  <div class="profile">
-    <h1 class="text-2xl font-bold mb-8">Профиль пользователя</h1>
-    <div class="profile-inner flex gap-6">
-      <!-- Боковая панель -->
-      <ProfileSiderbar />
-
-      <div class="profile-info w-4/5">
-        <!-- <div class="text-xl">Здравствуйте : {{ userInfo.email }}</div> -->
-        <router-view></router-view>
-      </div>
-    </div>
-  </div>
+  <h1>Здравствуйте : {{ userInfo.email }}</h1>
 </template>

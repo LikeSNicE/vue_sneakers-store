@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import RegisterAuth from '@/components/RegisterAuth.vue'
+import { login } from '@/services/auth'
 
 // Рефы для полей формы
 const email = ref('')
@@ -17,8 +18,8 @@ const loginUser = async () => {
     const response = await axios.post(
       'https://647af5741cbcb2a0.mokky.dev/auth',
       {
-        email: email.value, // Передаем email
-        password: password.value, // Передаем пароль
+        email: email.value,
+        password: password.value,
       },
       {
         headers: {
@@ -31,9 +32,11 @@ const loginUser = async () => {
     if (response.status === 200 || response.status === 201) {
       const token = response.data.token
       // Сохраняем токен в localStorage
-      localStorage.setItem('token', token)
+      // localStorage.setItem('token', token)
+      login(token);
       alert('Вы успешно вошли в систему!')
       router.push('/')
+
     } else {
       alert('Ошибка авторизации.')
     }
@@ -51,8 +54,6 @@ const loginUser = async () => {
 <template>
   <div class="contain bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="max-w-lg mx-auto shadow px-6 py-7 rounded overflow-hidden bg-white">
-      <!-- <h2 class="text-2xl uppercase font-medium text-center mb-1">Вход</h2>
-      <p class="text-gray-600 mb-6 text-sm text-center">Рады видеть снова!</p> -->
       <RegisterAuth welcome-text="Вход" />
       <form @submit.prevent="loginUser" autocomplete="off">
         <label for="email" class="block text-sm font-medium leading-5 text-gray-700 mb-2">
