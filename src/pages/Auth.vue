@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import RegisterAuth from '@/components/RegisterAuth.vue'
 import { login } from '@/services/auth'
+import { base_url } from '@/services/api'
 
 // Рефы для полей формы
 const email = ref('')
@@ -16,7 +17,7 @@ const loginUser = async () => {
   try {
     // Отправляем запрос на авторизацию
     const response = await axios.post(
-      'https://647af5741cbcb2a0.mokky.dev/auth',
+      `${base_url}/auth`,
       {
         email: email.value,
         password: password.value,

@@ -3,15 +3,18 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import RegisterAuth from '@/components/RegisterAuth.vue'
+import { base_url } from '@/services/api'
 
 const email = ref('')
 const password = ref('')
+const userName = ref('')
 const router = useRouter()
 
 const registerUser = async () => {
   try {
-    const response = await axios.post('https://647af5741cbcb2a0.mokky.dev/register', {
+    const response = await axios.post(`${base_url}/register`, {
       email: email.value,
+      userName: userName.value,
       password: password.value,
     })
     console.log('Успешная регистрация:', response.data)
@@ -29,7 +32,6 @@ const registerUser = async () => {
 
 <template>
   <div class="bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-    
     <RegisterAuth
       welcome-text="Создать новый аккаунт"
       other-option="Авторизоваться"
@@ -38,20 +40,38 @@ const registerUser = async () => {
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-        <form @submit.prevent="registerUser">
-          
-            <label for="email" class="block text-sm font-medium leading-5 text-gray-700 mb-2">
-              Email address
-            </label>
-            <input
-              id="email"
-              v-model="email"
-              placeholder="user@example.com"
-              type="email"
+        <form  @submit.prevent="registerUser">
+          <div class="mb-6">
+            <label for="username" class="block text-sm font-medium leading-5 text-gray-700 mb-2">
+            Ваше Имя
+          </label>
+          <input
+              id="username"
+              v-model="userName"
+              placeholder="Введите ваше имя"
+              type="text"
               required
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              class="
+              appearance-none 
+              block 
+              w-full 
+              px-3 
+              py-2
+              border border-gray-300 
+              rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
             />
-        
+          </div>
+          <label for="email" class="block text-sm font-medium leading-5 text-gray-700 mb-2">
+            Email address
+          </label>
+          <input
+            id="email"
+            v-model="email"
+            placeholder="user@example.com"
+            type="email"
+            required
+            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+          />
 
           <div class="mt-6">
             <label for="password" class="block text-sm font-medium leading-5 text-gray-700 mb-2">
@@ -63,6 +83,7 @@ const registerUser = async () => {
               type="password"
               required
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+              placeholder="********"
             />
           </div>
 
@@ -74,6 +95,8 @@ const registerUser = async () => {
               Создать аккаунт
             </button>
           </div>
+
+          
         </form>
       </div>
     </div>

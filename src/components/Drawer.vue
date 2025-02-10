@@ -1,10 +1,13 @@
 <script setup>
 import axios from 'axios'
 import { ref, computed, inject } from 'vue'
+import { base_url } from '@/services/api'
 
 import DrawerHead from './DrawerHead.vue'
 import CartItemList from './CartItemList.vue'
 import InfoBlock from './infoBlock.vue'
+import { getUserIdFromToken } from '@/services/api'
+
 
 const emit = defineEmits(['createOrder'])
 
@@ -17,20 +20,31 @@ const { cart } = inject('cart')
 
 const isCreating = ref(false)
 const orderId = ref(null)
+const totalOrderPrice = ref(null)
+
 
 const createOrder = async () => {
   try {
     isCreating.value = true
+    const token = localStorage.getItem('token');
+    const userId = getUserIdFromToken(token);
 
-    const { data } = await axios.post(`https://647af5741cbcb2a0.mokky.dev/orders`, {
+    if(!userId){
+      throw new Error('Пользователь не найден')
+    }
+
+    const { data } = await axios.post(`${base_url}/orders`, {
       items: cart.value,
-      totalPrice: props.totalPrice.value,
+      totalPrice: props.totalPrice,
+      userId
     })
 
     cart.value = []
 
+    console.log(data)
     // return data
     orderId.value = data.id
+    totalOrderPrice.value = data.totalPrice
   } catch (error) {
     console.log(error)
   } finally {
@@ -44,7 +58,7 @@ const buttonDisabled = computed(() => isCreating.value || cartIsEmpty.value)
 
 <template>
   <div class="fixed top-0 left-0 h-full w-full bg-black z-10 opacity-70"></div>
-  <div class="bg-white w-96 h-full top-0 right-0 fixed z-20 p-8">
+  <div class="bg-white w-96 h-full top-0 right-0 fixed z-20 p-8 overflow-y-auto">
     <DrawerHead />
 
     <div v-if="!totalPrice || orderId" class="flex h-full items-center">

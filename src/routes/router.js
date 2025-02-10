@@ -6,6 +6,7 @@ import Register from '@/pages/Register.vue'
 import Profile from '@/pages/Profile.vue'
 import ProfileOrders from '@/components/ProfileOrders.vue'
 import ProfileHome from '@/components/ProfileHome.vue'
+import ProfileSettings from '@/components/ProfileSettings.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -16,8 +17,9 @@ const routes = [
     path: '/profile',
     component: Profile,
     children: [
-      {path: "", component: ProfileHome},
-      { path: 'orders', name: 'ProfileOrders', component: ProfileOrders }
+      { path: '', component: ProfileHome },
+      { path: 'orders', name: 'ProfileOrders', component: ProfileOrders },
+      { path: 'settings', name: 'Profile Settings', component: ProfileSettings },
     ],
   },
 ]

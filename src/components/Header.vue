@@ -43,7 +43,7 @@ const emit = defineEmits(['openDrawer'])
         v-if="authState.isAuthenticated"
         class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black"
       >
-        <router-link to="/profile" class="flex gap-3 items-center">
+        <router-link to="/profile/" class="flex gap-3 items-center">
           <img src="/profile.svg" alt="profile" />
           <span>Профиль</span>
         </router-link>
