@@ -1,12 +1,14 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { authState } from '@/services/auth'
+import { useDrawerStore } from '@/stores/DrawerStore'
 
 defineProps({
   totalPrice: Number,
 })
 
 const emit = defineEmits(['openDrawer'])
+const drawerStore = useDrawerStore()
 </script>
 
 <template>
@@ -24,8 +26,16 @@ const emit = defineEmits(['openDrawer'])
     </router-link>
 
     <ul class="flex items-center gap-8">
-      <li
+      <!-- <li
         @click="() => emit('openDrawer')"
+        class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black"
+      >
+        <img src="/cart.svg" alt="cart" />
+        <b>{{ totalPrice }} тенге</b>
+      </li> -->
+
+      <li
+        @click="() => drawerStore.openDrawer()"
         class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black"
       >
         <img src="/cart.svg" alt="cart" />

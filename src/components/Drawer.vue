@@ -8,6 +8,7 @@ import CartItemList from './CartItemList.vue'
 import InfoBlock from './infoBlock.vue'
 import { getUserIdFromToken } from '@/services/api'
 import BaseButton from './BaseButton.vue'
+import { useLoadingStore } from '@/stores/loadingStore'
 
 const emit = defineEmits(['createOrder'])
 
@@ -16,6 +17,7 @@ const props = defineProps({
   vatPrice: Number,
 })
 
+const loadingStore = useLoadingStore()
 const { cart } = inject('cart')
 
 const isCreating = ref(false)
@@ -25,6 +27,7 @@ const totalOrderPrice = ref(null)
 const createOrder = async () => {
   try {
     isCreating.value = true
+    loadingStore.startLoading()
     const token = localStorage.getItem('token')
     const userId = getUserIdFromToken(token)
 
@@ -48,6 +51,7 @@ const createOrder = async () => {
     console.log(error)
   } finally {
     isCreating.value = false
+    loadingStore.stopLoading()
   }
 }
 
@@ -57,11 +61,12 @@ const buttonDisabled = computed(() => isCreating.value || cartIsEmpty.value)
 
 <template>
   <div class="fixed top-0 left-0 h-full w-full bg-black z-10 opacity-70"></div>
-  <div 
-  class="bg-white w-96 h-full top-0 right-0 fixed z-20 p-8 "
-  :class="{
-    'overflow-y-auto': !cartIsEmpty
-  }">
+  <div
+    class="bg-white w-96 h-full top-0 right-0 fixed z-20 p-8"
+    :class="{
+      'overflow-y-auto': !cartIsEmpty,
+    }"
+  >
     <DrawerHead />
 
     <div v-if="!totalPrice || orderId" class="flex h-full items-center">
@@ -86,13 +91,13 @@ const buttonDisabled = computed(() => isCreating.value || cartIsEmpty.value)
         <div class="flex gap-2">
           <span>Итого: </span>
           <div class="flex-1 border-b border-dashed"></div>
-          <b>{{ totalPrice }} Р</b>
+          <b>{{ totalPrice }} Тенге</b>
         </div>
 
         <div class="flex gap-2">
-          <span>Налог: 5%</span>
+          <span>НДС: 12%</span>
           <div class="flex-1 border-b border-dashed"></div>
-          <b>{{ vatPrice }} Р</b>
+          <b>{{ vatPrice }} Тенге</b>
         </div>
 
         <BaseButton

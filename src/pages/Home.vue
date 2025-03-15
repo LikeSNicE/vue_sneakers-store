@@ -5,8 +5,11 @@ import debounce from 'lodash.debounce'
 import CardList from '../components/CardList.vue'
 import { inject } from 'vue'
 import { base_url } from '@/services/api'
+import { useLoadingStore } from '@/stores/loadingStore'
 
 const { cart, addToCart, removeFromCart } = inject('cart')
+
+const loadingStore = useLoadingStore()
 
 const items = ref([]) // {value: []}
 
@@ -77,6 +80,7 @@ const fetchFavorites = async () => {
 
 const fetchItems = async () => {
   try {
+    loadingStore.startLoading()
     const params = {
       sortBy: filters.sortBy,
     }
@@ -101,6 +105,8 @@ const fetchItems = async () => {
     console.log(data)
   } catch (error) {
     console.error(error.message)
+  } finally {
+    loadingStore.stopLoading()
   }
 }
 
@@ -152,7 +158,6 @@ watch(filters, fetchItems)
     </div>
   </div>
   <div class="mt-10">
-    <CardList 
-    :items="items" @add-to-favorite="addToFavorite" @add-to-cart="onClickAddPlus" />
+    <CardList :items="items" @add-to-favorite="addToFavorite" @add-to-cart="onClickAddPlus" />
   </div>
 </template>

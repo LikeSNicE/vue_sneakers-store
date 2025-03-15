@@ -4,9 +4,9 @@ import Favorites from '@/pages/Favorites.vue'
 import Auth from '@/pages/Auth.vue'
 import Register from '@/pages/Register.vue'
 import Profile from '@/pages/Profile.vue'
-import ProfileOrders from '@/components/ProfileOrders.vue'
-import ProfileHome from '@/components/ProfileHome.vue'
-import ProfileSettings from '@/components/ProfileSettings.vue'
+import ProfileOrders from '@/pages/ProfileOrders.vue'
+import ProfileHome from '@/pages/ProfileHome.vue'
+import ProfileSettings from '@/pages/ProfileSettings.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },

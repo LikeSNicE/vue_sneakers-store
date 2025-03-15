@@ -4,11 +4,14 @@ import axios from 'axios'
 import CardList from '@/components/CardList.vue'
 import { base_url } from '@/services/api'
 import { getUserIdFromToken } from '@/services/api'
+import { useLoadingStore } from '@/stores/loadingStore'
 
+const loadingStore = useLoadingStore()
 const userOrders = ref([])
 
 const fetchOrders = async () => {
   try {
+    loadingStore.startLoading()
     const token = localStorage.getItem('token')
     const userId = getUserIdFromToken(token)
 
@@ -26,6 +29,8 @@ const fetchOrders = async () => {
     userOrders.value = data.sort((a, b) => b.id - a.id)
   } catch (error) {
     console.error(error)
+  } finally {
+    loadingStore.stopLoading()
   }
 }
 
