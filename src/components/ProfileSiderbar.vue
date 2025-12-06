@@ -1,14 +1,11 @@
-<script setup>
-// метод для выхода из профиля
-// const handleLogout = () => {
-//   logout(router)
-// }
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
 </script>
 
 <!-- Боковая панель -->
 <template>
   <div
-    class="profile-sidebar bg-white shadow-[0_4px_10px_0_rgba(0,0,0,0.15)] p-5 rounded-3xl min-w-[280px]"
+    class="profile-sidebar bg-white shadow-[0_4px_10px_0_rgba(0,0,0,0.15)] p-5 rounded-3xl min-w-[280px] max-[1050px]:w-full"
   >
     <ul class="flex flex-col gap-1">
       <li>

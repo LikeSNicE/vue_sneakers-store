@@ -1,8 +1,7 @@
 <script setup>
-import axios from 'axios'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { base_url } from '@/services/api'
+import { api } from '@/services/api'
 import BaseButton from '@/components/BaseButton.vue'
 
 import AuthSlot from '@/components/AuthSlot.vue'
@@ -14,7 +13,7 @@ const router = useRouter()
 
 const registerUser = async () => {
   try {
-    const response = await axios.post(`${base_url}/register`, {
+    const response = await api.post(`/register`, {
       email: email.value,
       userName: userName.value,
       password: password.value,

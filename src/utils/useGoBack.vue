@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { useRouter } from 'vue-router'
 
 const useGoBack = () => {

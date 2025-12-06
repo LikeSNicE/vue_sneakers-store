@@ -1,9 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import CardWide from './CardWide.vue'
+import { type Sneakers } from '@/types/sneakers'
 
-defineProps({
-  items: Array,
-})
+defineProps<{
+  items: Sneakers[]
+}>()
 </script>
 
 <template>
@@ -14,6 +15,7 @@ defineProps({
       :title="item.title"
       :imageUrl="item.imageUrl"
       :price="item.price"
-    ></CardWide>
+    >
+    </CardWide>
   </div>
 </template>

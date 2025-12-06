@@ -1,9 +1,13 @@
-<script setup>
-defineProps({
-  height: String,
-  width: String,
-  borderRadius: String,
-})
+<script setup lang="ts">
+import { toRefs } from 'vue'
+
+const props = defineProps<{
+  height?: string
+  width?: string
+  borderRadius?: string
+}>()
+
+const { height, width, borderRadius } = toRefs(props)
 </script>
 
 <template>

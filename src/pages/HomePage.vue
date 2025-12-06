@@ -15,8 +15,6 @@ const loadingStore = useLoadingStore()
 const filterStore = useFilterStore()
 const goodsStore = useGoodsStore()
 
-// const items = ref([])
-
 const onChangeSelect = (event) => {
   filterStore.filters.sortBy = event.target.value
 }
@@ -32,14 +30,12 @@ onMounted(async () => {
 
   await goodsStore.fetchItems()
   await goodsStore.fetchFavorites()
-  // goodsStore.syncCartState() // <-- добавляем синхронизацию
 })
 
 watch(
   () => cartStore.cart,
   (newCart) => {
     localStorage.setItem('cart', JSON.stringify(newCart))
-    // goodsStore.syncCartState()
   },
   { deep: true },
 )
@@ -49,11 +45,11 @@ watch(filterStore.filters, () => goodsStore.fetchItems(), {
 })
 </script>
 
-<!-- <template>
-  <div class="flex justify-between items-center">
+<template>
+  <div class="flex justify-between items-center max-[768px]:flex-col">
     <TitleBaseSlot>Все кроссовки</TitleBaseSlot>
 
-    <div class="flex gap-4">
+    <div class="flex gap-4 max-[768px]:mt-4 max-[480px]:flex-col max-[480px]:w-full">
       <select @change="onChangeSelect" class="py-2 px-3 border rounded-md outline-none">
         <option value="name">По названию</option>
         <option value="price">По цене (Дешевые)</option>
@@ -64,7 +60,7 @@ watch(filterStore.filters, () => goodsStore.fetchItems(), {
         <img class="absolute top-3 left-3" src="/search.svg" />
         <input
           @input="onChangeSearchInput"
-          class="border rounded-md py-2 pl-11 pr-4 outline-none focus:border-gray-400"
+          class="border rounded-md py-2 pl-11 pr-4 outline-none focus:border-gray-400 max-[480px]:w-full"
           type="text"
           placeholder="Поиск..."
         />
@@ -75,9 +71,10 @@ watch(filterStore.filters, () => goodsStore.fetchItems(), {
     <CardListSkeleton v-if="loadingStore.isLoading" />
 
     <CardList
+      :is-favorites="false"
       :items="goodsStore.goods"
       @add-to-favorite="goodsStore.addToFavorite"
       @add-to-cart="goodsStore.onClickAddPlus"
     />
   </div>
-</template> -->
+</template>

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import ProfileSiderbar from '@/components/ProfileSiderbar.vue'
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
@@ -21,7 +21,7 @@ const currentPageTitle = computed(() => {
       <TitleBaseSlot>{{ currentPageTitle }}</TitleBaseSlot>
     </div>
 
-    <div class="flex gap-6 items-start">
+    <div class="flex gap-6 items-start max-[1050px]:flex-col">
       <!-- Боковая панель -->
       <ProfileSiderbar />
       <div class="bg-white shadow-[0_4px_10px_0_rgba(0,0,0,0.15)] p-5 rounded-3xl w-full">

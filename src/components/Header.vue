@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { authState } from '@/services/auth'
-import { useDrawerStore } from '@/stores/DrawerStore'
-import { ref } from 'vue'
+import { authState } from '../services/auth'
+import { useDrawerStore } from '../stores/DrawerStore'
+import Logo from './Logo.vue'
 
 defineProps({
   totalPrice: Number,
@@ -10,66 +10,81 @@ defineProps({
 
 const emit = defineEmits(['openDrawer'])
 const drawerStore = useDrawerStore()
-
-const isBurgerMenu = ref(true)
 </script>
 
 <template>
   <header
-    class="flex justify-between items-center px-10 py-8 border-b border-slate-200 z-0 max-[1024px]:py-4 max-[1024px]:px-5"
+    class="flex justify-between items-center px-10 py-8 border-b border-slate-200 z-0 header-content-display max-[1024px]:py-4 max-[1024px]:px-5 header-md header-sm"
   >
-    <router-link to="/">
-      <div class="flex gap-[16px]">
-        <div class="">
-          <img class="w-10" src="/logo.png" alt="Logo" />
-        </div>
-        <div class="title-logo-mobile max-[380px]:hidden">
-          <h2 class="text-xl font-bold uppercase">Vue Sneakers</h2>
-          <p class="text-slate-400">Магазин лучших кроссовок</p>
-        </div>
-      </div>
-    </router-link>
+    <Logo />
 
-    <ul class="md:hidden h-6 flex flex-col justify-between w-6 cursor-pointer" v-if="isBurgerMenu">
-      <li class="h-1 w-full bg-black rounded"></li>
-      <li class="h-1 w-full bg-black rounded"></li>
-      <li class="h-1 w-full bg-black rounded"></li>
-    </ul>
-
-    <ul class="flex items-center gap-8 max-[768px]:hidden">
+    <ul class="flex items-center gap-8 max-[500px]:gap-2">
       <li
         @click="() => drawerStore.openDrawer()"
-        class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black"
+        class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black max-[500px]:flex-col max-[500px]:gap-1"
       >
         <img src="/cart.svg" alt="cart" />
-        <b>{{ totalPrice }} тенге</b>
+        <b class="">{{ totalPrice }} тенге</b>
       </li>
 
       <router-link to="/favorites">
-        <li class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black">
+        <li
+          class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black max-[500px]:flex-col max-[500px]:gap-1"
+        >
           <img src="/heart.svg" alt="heart" />
           <span>Избранное</span>
         </li>
       </router-link>
 
-      <li
-        v-if="authState.isAuthenticated"
-        class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black"
-      >
-        <router-link to="/profile/settings" class="flex gap-3 items-center">
+      <router-link v-if="authState.isAuthenticated" to="/profile/settings" class="">
+        <li
+          class="flex items-center gap-3 text-slate-500 cursor-pointer hover:text-black max-[500px]:flex-col max-[500px]:gap-1"
+        >
           <img src="/profile.svg" alt="profile" />
           <span>Профиль</span>
-        </router-link>
-      </li>
+        </li>
+      </router-link>
 
-      <li v-else>
-        <router-link to="/auth/login" class="flex gap-3 items-center">
+      <router-link v-else to="/auth/login">
+        <li class="flex gap-3 items-center">
           <img src="/profile.svg" alt="profile" />
           <span>Войти</span>
-        </router-link>
-      </li>
+        </li>
+      </router-link>
     </ul>
   </header>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.header-md {
+  & {
+    @media (max-width: 768px) {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #fff;
+      z-index: 2;
+      padding: 16px;
+      justify-content: center;
+      gap: 20px;
+    }
+  }
+}
+
+.header-sm {
+  @media (max-width: 380px) {
+    justify-content: space-between;
+    flex-direction: column;
+  }
+
+  @media (max-width: 320px) {
+    padding: 10px;
+  }
+
+  & ul {
+    @media (max-width: 380px) {
+      order: -1;
+    }
+  }
+}
+</style>

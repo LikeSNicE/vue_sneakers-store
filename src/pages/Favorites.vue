@@ -1,9 +1,8 @@
 <script setup>
-import axios from 'axios'
 import { onMounted, ref, watch } from 'vue'
 
 import CardList from '../components/CardList.vue'
-import { base_url } from '@/services/api'
+import { api } from '@/services/api'
 import { useLoadingStore } from '@/stores/loadingStore'
 import CardListSkeleton from '@/components/CardListSkeleton.vue'
 import NoFavoritesCard from '@/components/NoFavoritesCard.vue'
@@ -24,7 +23,7 @@ const favorites = ref([])
 onMounted(async () => {
   try {
     loadingStore.startLoading()
-    const { data } = await axios.get(`${base_url}/favorites?_relations=items`)
+    const { data } = await api.get(`/favorites?_relations=items`)
     favorites.value = data.map((obj) => obj.item)
     console.log(data) // id: 1, item: карточка товара
     console.log(data.map((obj) => obj.item))

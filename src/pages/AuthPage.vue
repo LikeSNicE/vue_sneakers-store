@@ -1,9 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { login } from '@/services/auth'
-import { base_url } from '@/services/api'
+import { api } from '@/services/api'
 import BaseButton from '@/components/BaseButton.vue'
 import AuthSlot from '@/components/AuthSlot.vue'
 
@@ -17,8 +16,8 @@ const router = useRouter()
 const loginUser = async () => {
   try {
     // Отправляем запрос на авторизацию
-    const response = await axios.post(
-      `${base_url}/auth`,
+    const response = await api.post(
+      `/auth`,
       {
         email: email.value,
         password: password.value,

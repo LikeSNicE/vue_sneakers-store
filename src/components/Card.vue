@@ -1,14 +1,14 @@
-<script setup>
-defineProps({
-  id: Number,
-  imageUrl: String,
-  title: String,
-  price: Number,
-  isFavorite: Boolean,
-  isAdded: Boolean,
-  onClickFavorite: Function,
-  onClickAdd: Function,
-})
+<script setup lang="ts">
+defineProps<{
+  id: number
+  imageUrl: string
+  title: string
+  price: number
+  isFavorite: boolean
+  isAdded: boolean
+  onClickFavorite?: () => void
+  onClickAdd?: () => void
+}>()
 </script>
 
 <template>

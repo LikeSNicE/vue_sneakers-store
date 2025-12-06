@@ -4,7 +4,7 @@ const authState = reactive({
   isAuthenticated: !!localStorage.getItem('token'),
 })
 
-const login = (token) => {
+const login = (token: string) => {
   localStorage.setItem('token', token)
   authState.isAuthenticated = true
 }

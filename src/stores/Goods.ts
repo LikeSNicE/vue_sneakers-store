@@ -4,15 +4,17 @@ import { useLoadingStore } from './loadingStore'
 import { useCartStore } from './CartStore'
 import { useFilterStore } from './FiltersStore'
 import { api } from '@/services/api'
+import { type Sneakers, type IItemsParams } from '@/types/sneakers'
+import { getErrorMessage } from '@/utils/errors'
 
 export const useGoodsStore = defineStore('goods', () => {
-  const goods = ref([])
+  const goods = ref<Sneakers[]>([])
 
   const loadingStore = useLoadingStore()
   const cartStore = useCartStore()
   const filterStore = useFilterStore()
 
-  const onClickAddPlus = (item) => {
+  const onClickAddPlus = (item: Sneakers) => {
     if (!item.isAdded) {
       cartStore.addToCart(item)
     } else {
@@ -20,7 +22,7 @@ export const useGoodsStore = defineStore('goods', () => {
     }
   }
 
-  const addToFavorite = async (item) => {
+  const addToFavorite = async (item: Sneakers) => {
     try {
       if (!item.isFavorite) {
         const obj = {
@@ -51,18 +53,18 @@ export const useGoodsStore = defineStore('goods', () => {
         // 4️⃣ Локально очищаем favoriteId
         item.favoriteId = null
       }
-    } catch (error) {
-      console.log(error.message)
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error)
+      console.log(errorMessage)
     }
   }
 
   const fetchFavorites = async () => {
     try {
-      const { data: goodsFromApi } = await api.get('/items')
-
-      goods.value = goodsFromApi
-    } catch (error) {
-      console.error(error.message)
+      await api.get('/items')
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error)
+      console.error(errorMessage)
     }
   }
 
@@ -70,7 +72,7 @@ export const useGoodsStore = defineStore('goods', () => {
     try {
       loadingStore.startLoading()
 
-      const params = {
+      const params: IItemsParams = {
         sortBy: filterStore.filters.sortBy,
       }
 
@@ -83,8 +85,9 @@ export const useGoodsStore = defineStore('goods', () => {
       console.log(data)
 
       goods.value = data
-    } catch (error) {
-      console.error(error.message)
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error)
+      console.error(errorMessage)
     } finally {
       loadingStore.stopLoading()
     }

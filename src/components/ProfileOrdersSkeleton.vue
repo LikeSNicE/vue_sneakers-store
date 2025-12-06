@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import AnimatedPlaceholder from './AnimatedPlaceholder.vue'
 import CardWideSkeleton from './CardWideSkeleton.vue'
 </script>

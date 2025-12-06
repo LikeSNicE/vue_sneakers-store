@@ -1,6 +1,5 @@
-<script setup>
+<script setup lang="ts">
 import NoElementsInPage from './NoElementsInPage.vue'
-import ButtonBack from './ButtonBack.vue'
 </script>
 
 <template>
@@ -8,8 +7,5 @@ import ButtonBack from './ButtonBack.vue'
     <template #emoji>😔</template>
     <template #title>Избранных товаров нет</template>
     <template #text>Вы ничего не добавляли в избранное</template>
-    <template #button-back>
-      <ButtonBack></ButtonBack>
-    </template>
   </NoElementsInPage>
 </template>

@@ -1,17 +1,25 @@
-<script setup>
-import { ref, onMounted, reactive, watch } from 'vue'
-import axios from 'axios'
-import CardList from '@/components/CardList.vue'
-import { base_url } from '@/services/api'
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue'
+
+import { api } from '@/services/api'
 import { getUserIdFromToken } from '@/services/api'
 import { useLoadingStore } from '@/stores/loadingStore'
 import ProfileOrdersSkeleton from '@/components/ProfileOrdersSkeleton.vue'
 import NoOrders from '@/components/NoOrders.vue'
 import CardWideList from './CardWideList.vue'
 import TitleBaseSlot from './TitleBaseSlot.vue'
+import { type SneakersOrders, type SneakersOrdersParams } from '@/types/Orders'
 
 const loadingStore = useLoadingStore()
-const userOrders = ref([])
+const userOrders = ref<SneakersOrders[] | null>(null)
+
+// Создаем computed свойство для сортировки заказов
+const sortedOrders = computed(() => {
+  if (!userOrders.value) {
+    return []
+  }
+  return [...userOrders.value].sort((a, b) => b.id - a.id)
+})
 
 const fetchOrders = async () => {
   try {
@@ -23,14 +31,16 @@ const fetchOrders = async () => {
       throw new Error('ID пользователя не найден')
     }
 
-    const { data } = await axios.get(`${base_url}/orders`, {
-      params: {
-        userId, // Получаем только заказы текущего пользователя
-        _relations: 'items', // Если нужно связать с items
-      },
+    const ordersParams: SneakersOrdersParams = {
+      userId,
+      _relations: 'items',
+    }
+
+    const { data } = await api.get(`/orders`, {
+      params: ordersParams,
     })
 
-    userOrders.value = data.sort((a, b) => b.id - a.id)
+    userOrders.value = data
   } catch (error) {
     console.error(error)
   } finally {
@@ -43,18 +53,18 @@ onMounted(fetchOrders)
 
 <template>
   <div>
-    <!-- <h5 class="font-bold text-2xl mb-4">Личные заказы</h5> -->
     <TitleBaseSlot>Личные заказы</TitleBaseSlot>
 
     <ProfileOrdersSkeleton v-if="loadingStore.isLoading" />
 
-    <div v-else-if="userOrders.length === 0">
+    <div v-else-if="!loadingStore.isLoading && sortedOrders.length === 0">
       <NoOrders />
     </div>
 
+    <!-- Используем отсортированный массив sortedOrders для рендеринга -->
     <div
       v-else-if="!loadingStore.isLoading"
-      v-for="order in userOrders"
+      v-for="order in sortedOrders"
       :key="order.id"
       class="border-2 rounded-2xl my-4"
     >

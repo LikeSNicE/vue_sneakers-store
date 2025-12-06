@@ -1,27 +1,30 @@
 import { api } from '@/services/api'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { type Sneakers } from '@/types/sneakers'
+import { getErrorMessage } from '@/utils/errors'
 
 export const useCartStore = defineStore('cart', () => {
-  const cart = ref([])
+  const cart = ref<Sneakers[]>([])
 
   const totalPrice = computed(() => cart.value.reduce((acc, item) => acc + item.price, 0))
 
   const vatPrice = computed(() => Math.round((totalPrice.value * 12) / 100))
 
-  const addToCart = async (item) => {
+  const addToCart = async (item: Sneakers) => {
     try {
       item.isAdded = true
       await api.patch(`/items/${item.id}`, {
         isAdded: true,
       })
       cart.value.push(item)
-    } catch (error) {
-      console.log(error.message)
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error)
+      console.log(errorMessage)
     }
   }
 
-  const removeFromCart = async (item) => {
+  const removeFromCart = async (item: Sneakers) => {
     try {
       item.isAdded = false
       await api.patch(`/items/${item.id}`, { isAdded: false })
@@ -29,8 +32,9 @@ export const useCartStore = defineStore('cart', () => {
       if (index !== -1) {
         cart.value.splice(index, 1)
       }
-    } catch (error) {
-      console.error('Ошибка при удалении из корзины:', error)
+    } catch (error: unknown) {
+      const errorMessage = getErrorMessage(error)
+      console.log(errorMessage)
     }
   }
 

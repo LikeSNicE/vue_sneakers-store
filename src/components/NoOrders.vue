@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import NoElementsInPage from './NoElementsInPage.vue'
 </script>
 
@@ -11,9 +11,6 @@ import NoElementsInPage from './NoElementsInPage.vue'
         <p>Вы нищеброд?</p>
         <p>Оформите хотя бы один заказ.</p>
       </div>
-    </template>
-    <template #button-back>
-      <ButtonBack></ButtonBack>
     </template>
   </NoElementsInPage>
 </template>

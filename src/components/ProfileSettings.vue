@@ -1,55 +1,80 @@
-<script setup>
-import axios from 'axios'
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { base_url, fetchUser } from '@/services/api'
-import BaseButton from '../components/BaseButton.vue'
+import { api, getUserData } from '../services/api'
+import BaseButton from '@/components/BaseButton.vue'
 import { logout } from '@/services/auth'
 import { useRouter } from 'vue-router'
 import { useLoadingStore } from '@/stores/loadingStore'
+import { type User } from '@/types/Users'
+import { getErrorMessage } from '@/utils/errors'
 
-const userData = ref({
-  userName: '',
-  email: '',
-  avatar: '',
-})
+// Используем ref для одного объекта пользователя, инициализируя его базовой структурой.
+// Это предотвратит ошибки в шаблоне до загрузки данных.
+const userData = ref<User | null>(null)
 
 const router = useRouter()
 const loadingStore = useLoadingStore()
-
-const updateUserData = async () => {
-  const token = localStorage.getItem('token')
-  if (!token) {
-    console.error('Токен отсутствует!')
-    return
-  }
-
-  loadingStore.startLoading()
-
-  try {
-    await axios.patch(`${base_url}/users/${userData.value.id}`, userData.value)
-  } catch (error) {
-    console.error('Ошибка обновления данных:', error.message)
-  } finally {
-    loadingStore.stopLoading()
-  }
-}
 
 const handleLogOut = () => {
   logout()
   router.push('/auth/login')
 }
 
+const updateUserData = async () => {
+  // ID теперь всегда доступен в userData.value.id
+  if (!userData.value || !userData.value.id) {
+    console.error('ID пользователя не найден!')
+    return
+  }
+
+  loadingStore.startLoading()
+
+  try {
+    // Отправляем только те данные, которые могут быть изменены.
+    const payload = {
+      name: userData.value.userName,
+      email: userData.value.email,
+    }
+
+    await api.patch(`/users/${userData.value.id}`, payload)
+    console.log('Успешно обновленние данных пользователя')
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error)
+    console.log(`Ошибка [${errorMessage.status}]: ${errorMessage.message}`)
+
+    if (errorMessage.status === 401) {
+      handleLogOut()
+    }
+  } finally {
+    loadingStore.stopLoading()
+  }
+}
+
 onMounted(async () => {
-  await fetchUser(userData)
+  loadingStore.startLoading()
+  try {
+    const user = await getUserData()
+    if (!user) {
+      throw new Error('Данные пользователя не были получены')
+    }
+    userData.value = user
+  } catch (error: unknown) {
+    const errorMessage = getErrorMessage(error)
+    console.log(errorMessage)
+  } finally {
+    loadingStore.stopLoading()
+  }
 })
 </script>
 
 <template>
   <div>
-    <div class="grid grid-cols-2 gap-4">
+    <!-- Используем v-if чтобы форма не отображалась до загрузки данных -->
+    <div v-if="userData && userData.id" class="grid grid-cols-2 gap-4">
       <div>
-        <label class="block mb-2">Имя</label>
+        <label for="userName" class="block mb-2">Имя</label>
         <input
+          id="userName"
           v-model="userData.userName"
           type="text"
           class="border focus:outline-none focus:ring-2 focus:ring-lime-600 p-2 w-full rounded-xl"
@@ -57,8 +82,9 @@ onMounted(async () => {
       </div>
 
       <div>
-        <label class="block mb-2">Email</label>
+        <label for="userEmail" class="block mb-2">Email</label>
         <input
+          id="userEmail"
           v-model="userData.email"
           type="email"
           class="border focus:outline-none focus:ring-2 focus:ring-lime-600 p-2 w-full rounded-xl"
@@ -66,14 +92,18 @@ onMounted(async () => {
         />
       </div>
     </div>
+    <!-- Можно добавить скелетон или лоадер, пока userData грузится -->
+    <div v-else>
+      <p>Загрузка данных пользователя...</p>
+    </div>
 
     <div class="flex gap-2 mt-4">
       <BaseButton
         @click="updateUserData"
-        :disabled="loadingStore.isLoading"
+        :disabled="loadingStore.isLoading || !userData"
         :isLoading="loadingStore.isLoading"
         label="Сохранить данные"
-        padding="px-2"
+        class="px-2"
       />
       <button
         @click="handleLogOut"

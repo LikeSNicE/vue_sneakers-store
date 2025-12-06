@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import CardSkeleton from './CardSkeleton.vue'
 </script>
 
