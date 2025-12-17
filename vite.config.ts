@@ -8,6 +8,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 // https://vite.dev/config/
 export default defineConfig({
   base: '/vue_sneakers-store/',
+  build: {
+    outDir: 'docs',
+  },
   plugins: [vue(), vueJsx(), vueDevTools()],
   resolve: {
     alias: {
