@@ -7,21 +7,30 @@ import BaseButton from '@/components/BaseButton.vue'
 import AuthSlot from '@/components/AuthSlot.vue'
 import { getErrorMessage } from '@/utils/errors'
 import BaseInput from '@/components/BaseInput.vue'
+import { type RegisterCredentials } from '@/types/Users'
 
 const email = ref('')
 const password = ref('')
 const userName = ref('')
 const router = useRouter()
 
-const registerUser = async () => {
+const registerUser = async (): Promise<void> => {
   try {
-    const response = await api.post(`/register`, {
+    const registerFields: RegisterCredentials = {
       email: email.value,
       userName: userName.value,
       password: password.value,
-    })
-    localStorage.setItem('token', response.data.token)
-    router.push('/auth/login')
+    }
+
+    const response = await api.post(`/register`, registerFields as RegisterCredentials)
+
+    if (response.status === 200 || response.status === 201) {
+      const { token } = response.data
+      localStorage.setItem('token', token)
+      await router.push('/auth/login')
+    } else {
+      console.log(`Ошибка регистрации. ${response.statusText}`)
+    }
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error)
     console.log(errorMessage)

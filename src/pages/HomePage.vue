@@ -5,9 +5,9 @@ import CardList from '../components/CardList.vue'
 import { useLoadingStore } from '@/stores/loadingStore'
 import CardListSkeleton from '@/components/CardListSkeleton.vue'
 import TitleBaseSlot from '@/components/TitleBaseSlot.vue'
-import { useCartStore } from '@/stores/CartStore'
-import { useFilterStore } from '@/stores/FiltersStore'
-import { useGoodsStore } from '@/stores/Goods'
+import { useCartStore } from '@/stores/cartStore'
+import { useFilterStore } from '@/stores/filtersStore'
+import { useGoodsStore } from '@/stores/goodsStore'
 
 const cartStore = useCartStore()
 

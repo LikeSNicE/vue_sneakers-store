@@ -7,6 +7,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import AuthSlot from '@/components/AuthSlot.vue'
 import { getErrorMessage } from '@/utils/errors'
 import BaseInput from '@/components/BaseInput.vue'
+import { type AuthCredentials } from '@/types/Users'
 
 // Рефы для полей формы
 const email = ref('')
@@ -15,30 +16,28 @@ const password = ref('')
 const router = useRouter()
 
 // Функция авторизации пользователя
-const loginUser = async () => {
+const loginUser = async (): Promise<void> => {
   try {
+    const registerObj: AuthCredentials = {
+      email: email.value,
+      password: password.value,
+    }
+
     // Отправляем запрос на авторизацию
-    const response = await api.post(
-      `/auth`,
-      {
-        email: email.value,
-        password: password.value,
+    const response = await api.post(`/auth`, registerObj as AuthCredentials, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    })
 
     if (response.status === 200 || response.status === 201) {
-      const token = response.data.token
+      const { token } = response.data
 
       login(token)
-      router.push('/')
+      await router.push('/')
     } else {
-      alert('Ошибка авторизации.')
+      console.log(`Ошибка авторизации. ${response.statusText}`)
     }
   } catch (error: unknown) {
     const errorMessage = getErrorMessage(error)
