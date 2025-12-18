@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { BASE_URL } from '@/config/baseUrl'
+
 defineProps<{
   id: number
   imageUrl: string
@@ -17,13 +19,16 @@ defineProps<{
   >
     <img
       v-if="onClickFavorite"
-      :src="!isFavorite ? '/like-1.svg' : '/like-2.svg'"
+      :src="!isFavorite ? `${BASE_URL}like-1.svg` : `${BASE_URL}like-2.svg`"
       alt="favorite"
       class="absolute top-8 left-8"
       @click="onClickFavorite"
     />
-    <img :src="imageUrl" alt="sneaker" />
+
+    <img :src="`${BASE_URL}${imageUrl.replace(/^\//, '')}`" />
+
     <p class="mt-2">{{ title }}</p>
+
     <div class="flex justify-between mt-5">
       <div class="flex flex-col">
         <span class="text-slate-400">Цена:</span>
@@ -33,7 +38,7 @@ defineProps<{
       <img
         v-if="onClickAdd"
         @click="onClickAdd"
-        :src="!isAdded ? '/plus.svg' : '/checked.svg'"
+        :src="!isAdded ? `${BASE_URL}plus.svg` : `${BASE_URL}checked.svg`"
         alt="plus"
       />
     </div>
